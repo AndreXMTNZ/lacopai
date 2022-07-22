@@ -24,6 +24,6 @@
   Serial.print("pH Val:");
 
   Serial.println(ph_act);
-  delay(1000);
+  //delay(1000);
   return ph_act;
  }

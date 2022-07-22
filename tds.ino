@@ -49,11 +49,11 @@ Serial.print(tdsValue,0);
 Serial.println("ppm");
 delay(450);
 
-if (tdsValue >= 700){
-digitalWrite(r2,LOW);
+if (tdsValue >= 50){
+digitalWrite(r2, LOW);
 }
 else{
-digitalWrite(r2,HIGH);
+digitalWrite(r2, HIGH);
 }
 }
 return tdsValue;

@@ -6,11 +6,11 @@
 #include <Wire.h>
 #include <DallasTemperature.h>
 //Conections to Database of Firebase and Network TCP/IP
-/*ZyXEL NBG-418N v2*//*FKTUD64497*//*""*//*""*/
+/*ZyXEL NBG-418N v2*//*ElWifiDel3B22K22*//*"Nexxt_BGN11"*//*"FKTUD-nexxt24"*/
 #define DATABASE_URL "smart-tank-iot-default-rtdb.firebaseio.com" //<databaseName>.firebaseio.com or <databaseName>.<region>.firebasedatabase.app
 #define DATABASE_SECRET "wW9ayoCtblIkDzhA86Z5iUXSoaDZC2CNwnxv4Bvb"
-#define WIFI_SSID "ZyXEL NBG-418N v2"
-#define WIFI_PASSWORD "ElWifiDel3B22K22"
+#define WIFI_SSID "Nexxt_BGN11"
+#define WIFI_PASSWORD "FKTUD-nexxt24"
 
 //Defs for Sensor TDS
 #define TdsSensorPin A3
@@ -27,10 +27,12 @@ FirebaseData fbdo;
 //Vars to wlevel, TDS & temp.
 //Use reles on pin 0 to 7.
 int nivel = 9;//valor de lectura
+
 int r1 = 1;//Water Level
 int r2 = 2;//TDS
-int r3 = 3;//temp cool
-int r4 = 4;//temp heat
+int r3 = 3;//temp HEAT
+int r4 = 4;//LAMP1
+int r5 = 5;//LAMP1
 
 //Vars to TDS.
 int analogBuffer[SCOUNT]; // store the analog value in the array, read from ADC
@@ -47,8 +49,13 @@ int buffer_arr[10], temp;
 void setup() {
   Serial.begin(9600);
   pinMode(nivel, INPUT);
+
   pinMode(r1, OUTPUT);//Water Level
   pinMode(r2,OUTPUT);//TDS
+  pinMode(r3, OUTPUT);//Temp heat
+  pinMode(r4,OUTPUT);//Lamp 1
+  pinMode(r5, OUTPUT);//Lamp 2
+
   WiFiDrv::pinMode(25, OUTPUT);
   WiFiDrv::pinMode(26, OUTPUT);
   WiFiDrv::pinMode(27, OUTPUT);
@@ -82,9 +89,7 @@ void loop() {
       ph = fbdo.floatData();
       Serial.print("PH");
       Serial.println(ph);
-
     }
-
   } else {
     //Failed, then print out the error detail
     Serial.print("Error: ");
@@ -152,6 +157,29 @@ ph();
     //Failed, then print out the error detail
     Serial.print("Error: ");
       Serial.println(fbdo.errorReason());
+  }
+
+  //For get data for lamp 1.
+  bool bot1 = false;
+  if (Firebase.getBool(fbdo, "/config/bot1")) {
+    if (fbdo.dataType() == "bool") {
+      bot1 = fbdo.boolData();
+      Serial.print("Lumunaria 1");
+      Serial.println(bot1);
+
+    }
+  } else {
+      //Failed, then print out the error detail
+      Serial.print("Error: ");
+      Serial.println(fbdo.errorReason());
+  }      
+  
+  if(bot1 == false){
+    digitalWrite(r4, HIGH);
+  }
+
+  if(bot1 == true){
+    digitalWrite(r4, LOW);
   }
 
   delay(500);

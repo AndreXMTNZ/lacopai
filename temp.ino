@@ -9,13 +9,11 @@ int tempa(){
 
   if(temp >= 27){
     digitalWrite(r3, LOW);
-    digitalWrite(r4, HIGH);
     Serial.println("Enfriando");
   }
 
-  if(temp <= 20){
+  if(temp <= 25){
     digitalWrite(r3, HIGH);
-    digitalWrite(r4, LOW);
     Serial.println("Calentado");
   }
 
